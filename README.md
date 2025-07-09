@@ -39,16 +39,15 @@ In order to use FileKey, you need a compatible password manager (Apple Passwords
 
 | Platform      | Supported Passkey Providers        | Notes               |
 |--------------|-------------------------------------|------------------------------------|
-| macOS     | Apple Passwords, Yubikey         | Safari ≥ 17 or Chrome ≥ 112. Yubikeys will not work in Safari. |
-| Windows       | Windows Hello, YubiKey  | Edge ≥ 112 or Chrome ≥ 112. Requires Windows 11. |
+| macOS     | Apple Passwords, Yubikey, 1Password         | Safari ≥ 17 or Chrome ≥ 112. Yubikeys will not work in Safari. |
+| Windows       | 1Password, YubiKey  | Edge ≥ 112 or Chrome ≥ 112. Requires Windows 11. |
 | Linux         | YubiKey (via browser)              | Latest version of Chrome or Chromium-based browsers.  |
-| iOS       | Apple Passwords | Safari ≥ 17 or Chrome ≥ 112 |
-| Android       | Google Passwords, Yubikey | Chrome ≥ 112 |
+| iOS       | Apple Passwords, 1Password | Safari ≥ 17 or Chrome ≥ 112 |
+| Android       | Google Passwords, 1Password, Yubikey | Chrome ≥ 112 |
 
 <br>
 
-> ⚠️ **Notes:**  
-> - The 1Password browser extension appears to work with FileKey, but more verification is needed.
+> ⚠️ **Notes:** 
 > - Proton Pass and BitWarden won't work until they properly support PRF.  
 > - Samsung Pass has been reported to work, despite not officially supporting PRF. 
 > - Windows 10 and below does not support PRF, and thus won't work.
@@ -106,3 +105,6 @@ Every FileKey user has a unique **Share Key** — a long string that acts like a
 
 > **💬 [Signal Group](https://signal.group/#CjQKIDpdakX0nr1V00ciNv3dsWCFZgUwm_NylulFJz4VOUJ_EhBtY-bq759RNExzcCWMUGIB)**  
 > *(Chat with us directly)*
+
+> **🤝 [Donate](https://www.paypal.com/donate/?hosted_button_id=HCN6NHN39KA44)**  
+> *(Help support FileKey development)*
