@@ -1,5 +1,5 @@
 # 🐳 Self-Hosting FileKey as a Dockerized PWA
-A big thank you to wintech147 for putting this guide together!
+A big thank you to Wintech147 for putting this guide together!
 
 ---
 
