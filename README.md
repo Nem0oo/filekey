@@ -95,6 +95,12 @@ Every FileKey user has a unique **Share Key** — a long string that acts like a
 
 ---
 
+### 🙋‍♂️ Self-Hosting
+
+For those interested in self-hosting FileKey, user Wintech47 put [this awesome guide](self_hosting_guide.md) together. 
+
+---
+
 ### 🔗 Links
 
 > **🔒 [filekey.app](https://filekey.app)**  
