@@ -31,7 +31,6 @@ filekey/
 ├── index.html
 ├── manifest.json
 ├── sw.js
-├── ww.js
 └── icons/ (optional)
     ├── icon-192.png
     └── icon-512.png
