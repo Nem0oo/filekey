@@ -31,6 +31,7 @@ filekey/
 ├── index.html
 ├── manifest.json
 ├── sw.js
+├── ww.js
 └── icons/ (optional)
     ├── icon-192.png
     └── icon-512.png
@@ -69,6 +70,7 @@ Since the original repo doesn't include actual icons, create your own:
      }
    ]
    ```
+(Editor's note: there is now an SVG version of the FileKey icon in the repo.)
 
 ---
 
