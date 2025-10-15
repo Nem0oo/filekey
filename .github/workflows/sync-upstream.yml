@@ -28,6 +28,7 @@ jobs:
           # Restaure ton .github tel qu'il est dans ta branche (évite l'écrasement)
           git restore --source=origin/main --staged --worktree .github
           git restore --source=origin/main --staged --worktree Dockerfile
+          git restore --source=origin/main --staged --worktree .dockerignore
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
