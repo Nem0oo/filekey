@@ -1,0 +1,37 @@
+name: Sync from upstream
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # tous les jours à minuit UTC
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/RockwellShah/filekey.git
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Merge upstream changes
+        run: |
+          git checkout main
+          git merge --strategy=recursive --strategy-option=theirs upstream/main || true
+          # Restaure ton .github tel qu'il est dans ta branche (évite l'écrasement)
+          git restore --source=origin/main --staged --worktree .github
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -am "Sync upstream without overwriting .github"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
