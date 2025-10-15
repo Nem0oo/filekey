@@ -1,5 +1,5 @@
 # 📛 Nom du workflow
-name: Build and Deploy Calculateur SMPH
+name: Build and Deploy Filekey
 
 # 🚀 Ce workflow se déclenche à chaque push sur main
 on:
