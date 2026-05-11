@@ -95,9 +95,49 @@ Every FileKey user has a unique **Share Key** — a long string that acts like a
 
 ---
 
+### 🫥 What Happens if FileKey Disappears?
+
+If you are worried about relying on the FileKey website, you can always install FileKey locally as a progressive web app. It's easy, and only takes a few seconds. 
+
+#### 💻 Desktop (Mac, Windows, Linux) with Chrome / Edge / Brave
+
+1. Open FileKey in your browser.
+2. Look for the “Install App” icon in the address bar (a little downward-pointing arrow with a computer/screen).
+3. Click Install.
+
+FileKey will open as its own standalone app and appear in your Applications list, and will fully work offline.
+
+#### 📱 iOS (iPhone / iPad)
+
+Safari is required — only Safari supports PWAs fully on iOS.
+
+1. Open FileKey in Safari.
+2. Tap the Share icon (square with arrow).
+3. Scroll down and tap Add to Home Screen.
+4. Tap Add in the top-right corner.
+
+FileKey will now behave like a native app and can be used offline once cached.
+
+#### 🤖 Android with Chrome / Edge / Brave / Samsung Internet
+
+1. Open FileKey in your browser.
+2. You’ll see a banner that says “Add to Home screen” — tap it.
+3. Or tap the ⋮ menu → Add to Home screen.
+4. Confirm Install.
+
+You’ll now have a standalone FileKey app icon that works offline.
+
+---
+
 ### 🙋‍♂️ Self-Hosting
 
 For those interested in self-hosting FileKey, user Wintech47 put [this awesome guide](self_hosting_guide.md) together. 
+
+---
+
+### 📝 Review
+
+The famous french cybersecurity blogger Korben wrote a nice [breakdown of FileKey](https://korben.info/filekey-chiffrement-fichiers-passkeys-local-opensource.html) on his blog.
 
 ---
 
@@ -111,6 +151,3 @@ For those interested in self-hosting FileKey, user Wintech47 put [this awesome g
 
 > **💬 [Signal Group](https://signal.group/#CjQKIDpdakX0nr1V00ciNv3dsWCFZgUwm_NylulFJz4VOUJ_EhBtY-bq759RNExzcCWMUGIB)**  
 > *(Chat with us directly)*
-
-> **🤝 [Donate](https://www.paypal.com/donate/?hosted_button_id=HCN6NHN39KA44)**  
-> *(Help support FileKey development)*
