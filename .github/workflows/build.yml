@@ -1,49 +1,82 @@
-# 📛 Nom du workflow
-name: Build and Deploy Filekey
+name: Filekey CI
 
-# 🚀 Ce workflow se déclenche à chaque push sur main
 on:
   push:
     branches:
       - main
 
-# ⚙️ Jobs à exécuter
 jobs:
-  build:
-    name: Build & Push Docker Image
-    runs-on: ubuntu-latest  # Machine virtuelle Linux
-
+  build_and_push_to_docker_hub:
+    if: github.event_name == 'push'
+    name: Build Docker Image with tag
+    runs-on: ubuntu-latest
     steps:
-      # 🧾 Étape 1 – Récupère le code de ton repo
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      # 🐳 Étape 2 – Build de l'image Docker qui sert le site
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/filekey:latest .
-
-      # 🔐 Étape 3 – Login Docker Hub (avec secrets GitHub)
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # 📦 Étape 4 – Push de l'image
+      - name: Tag previous
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/filekey:latest && \
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/filekey:latest ${{ secrets.DOCKERHUB_USERNAME }}/filekey:previous && \
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/filekey:previous || true
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/filekey:latest
+          build-args: SHA=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Push Docker image
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/filekey:latest
 
-      # 📦 Étape 5 – Mise a jour de l'image en prod
-      - name: Add SSH key
+  trigger_watchtower:
+    if: github.event_name == 'push'
+    needs: build_and_push_to_docker_hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy via n8n
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATEKEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan ${{ secrets.URL_SERVER }} >> ~/.ssh/known_hosts
-        shell: bash
+          curl -H "Content-Type: application/json" "https://n8n.gcourtot.fr/webhook/${{ secrets.N8N_WEBHOOK_ID }}"
 
-      - name: Deploy via SSH
+  test_prod:
+    if: github.event_name == 'push'
+    needs: trigger_watchtower
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for watchtower
+        run: sleep 30
+      - name: Test version
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USERNAME }}@${{ secrets.URL_SERVER }} './srv/filekey/update-filekey.sh'
+          for i in {1..10}; do
+            curl -sf https://filekey.gcourtot.fr/version.txt | grep -q ${{ github.sha }} && exit 0
+            sleep 10
+          done
+          exit 1
+
+  trigger_rollback:
+    needs: [test_prod, build_and_push_to_docker_hub]
+    if: always() && needs.test_prod.result == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Rollback image
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/filekey:previous
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/filekey:previous ${{ secrets.DOCKERHUB_USERNAME }}/filekey:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/filekey:latest
+      - name: Trigger deploy via n8n
+        run: |
+          curl -H "Content-Type: application/json" "https://n8n.gcourtot.fr/webhook/${{ secrets.N8N_WEBHOOK_ID }}"
